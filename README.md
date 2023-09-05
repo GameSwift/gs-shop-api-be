@@ -1,0 +1,1 @@
+# gs-shop-api-be

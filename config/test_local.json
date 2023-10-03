@@ -1,0 +1,8 @@
+{
+    "database": {
+        "database": "starheroes_test"
+    },
+    "oauth": {
+        "server": "http://localhost:3000/api/oauth"
+    }
+}

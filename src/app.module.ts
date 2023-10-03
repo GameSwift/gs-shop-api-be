@@ -7,6 +7,7 @@ import { OauthModule } from './oauth/oauth.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from './config/config.module';
 import { WalletsModule } from './wallets/wallets.module';
+import { WalletsApiService } from './wallets/wallets.api.service';
 
 @Module({
     imports: [
@@ -18,6 +19,6 @@ import { WalletsModule } from './wallets/wallets.module';
         WalletsModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [AppService, WalletsApiService],
 })
 export class AppModule {}

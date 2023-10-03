@@ -14,6 +14,7 @@ import {
     AsyncFactoryProvider,
     propertyOfProvider,
 } from '../utils/dependency.injection';
+import { WalletsConfig, walletsConfigSchema } from '../wallets/wallets.config';
 
 interface EnvConfig {
     baseUrl: string;
@@ -32,6 +33,7 @@ while (
 dotenv.config({ path: path.join(envPath, '.env') });
 
 export type AppConfig = EnvConfig & {
+    wallets: WalletsConfig;
     oauth: OauthConfig;
     database: DatabaseConfig;
 };
@@ -39,8 +41,9 @@ export type AppConfig = EnvConfig & {
 const configSchema = convict<AppConfig>({
     oauth: oAuthConfigSchema,
     database: databaseConfigSchema,
+    wallets: walletsConfigSchema,
     baseUrl: {
-        default: 'http://localhost:3000/',
+        default: 'http://localhost:3005/',
         doc: 'Application base url.',
         env: 'BASE_URL',
         format: String,
@@ -62,6 +65,7 @@ const configSchema = convict<AppConfig>({
 export const loadConfig: () => AppConfig = memoize(() => {
     const env: string = configSchema.get('environment').toLowerCase();
 
+    console.info('Loading config for environment', env);
     const defaultConfig = path.join(process.cwd(), 'config', 'default.json');
     const envConfig = path.join(process.cwd(), 'config', `${env}.json`);
     const files = [defaultConfig, envConfig].filter((configPath) => {
@@ -97,10 +101,17 @@ const databaseConfigProvider = propertyOfProvider(
     'DatabaseConfig',
 );
 
+const walletsConfigProvider = propertyOfProvider(
+    appConfigProvider,
+    'wallets',
+    'WalletsConfig',
+);
+
 const providers: Provider[] = [
     appConfigProvider,
     oauthConfigProvider,
     databaseConfigProvider,
+    walletsConfigProvider,
 ];
 
 // @Global() // if we don't have to import config module everywhere

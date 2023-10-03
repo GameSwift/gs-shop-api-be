@@ -1,9 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Offer } from './entities/offer.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class OffersService {
+    constructor(
+        @InjectRepository(Offer)
+        private offersRepository: Repository<Offer>,
+    ) {}
+
     findAll() {
-        return `This action returns all offers`;
+        return this.offersRepository.find();
     }
 
     findOne(id: number) {

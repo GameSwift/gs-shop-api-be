@@ -30,7 +30,5 @@ export class OauthGetMeResponse {
         this.id = user.id;
         this.nickname = user.nickname;
         this.email = user.email;
-        this.avatarUrl = user.avatarUrl || null;
-        this.country = user.country || null;
     }
 }

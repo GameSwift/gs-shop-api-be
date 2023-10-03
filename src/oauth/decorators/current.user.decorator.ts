@@ -4,6 +4,7 @@ import { ExternalTokenInfoData } from '../oauth.api.service';
 export interface ICurrentUser {
     id: string;
     tokenData: ExternalTokenInfoData;
+    bearer: string;
 }
 
 export const CurrentUser = createParamDecorator(

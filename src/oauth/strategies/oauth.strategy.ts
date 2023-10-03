@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { Request } from 'express';
 import { Strategy } from 'passport-custom';
 import { ICurrentUser } from '../decorators/current.user.decorator';
 import { OauthService } from '../oauth.service';
-import { Request } from 'express';
 
 @Injectable()
 export class OauthStrategy extends PassportStrategy(Strategy, 'oauth') {
@@ -25,7 +25,11 @@ export class OauthStrategy extends PassportStrategy(Strategy, 'oauth') {
             await this.oauthService.isAccessTokenValid(extractedToken);
 
         if (result.valid === true) {
-            return { id: result.userId, tokenData: result.tokenData };
+            return {
+                id: result.userId,
+                tokenData: result.tokenData,
+                bearer: extractedToken,
+            };
         }
 
         throw new UnauthorizedException(result.reason);

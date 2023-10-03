@@ -1,5 +1,5 @@
 import { Controller, Get, UnauthorizedException } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from '../users/users.service';
 import { CurrentUser, ICurrentUser } from './decorators/current.user.decorator';
 import { UseOauthGuard } from './decorators/oauth.guard.decorator';
@@ -7,6 +7,7 @@ import { OauthGetMeResponse } from './dtos/oauth.response';
 import { OauthService } from './oauth.service';
 
 @Controller('oauth')
+@ApiTags('oauth')
 export class OauthController {
     constructor(
         private readonly oauthService: OauthService,

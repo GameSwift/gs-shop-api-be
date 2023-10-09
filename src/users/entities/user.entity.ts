@@ -1,5 +1,6 @@
-import { Column, Entity, JoinTable, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../database/base.entity';
+import { Item } from '../../items/entities/item.entity';
 import { OauthToken } from '../../oauth/entities/oauth.token.entity';
 
 @Entity()
@@ -16,4 +17,8 @@ export class User extends BaseEntity {
     @OneToMany(() => OauthToken, (oauthToken) => oauthToken.user)
     @JoinTable()
     oauthTokens: Array<OauthToken>;
+
+    @ManyToMany(() => Item, (item) => item.users, { cascade: true })
+    @JoinTable()
+    items: Array<Item>;
 }

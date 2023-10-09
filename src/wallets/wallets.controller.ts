@@ -22,7 +22,6 @@ export class WalletsController {
         @CurrentUser() user: ICurrentUser,
     ): Promise<WalletsGetBalanceResponse> {
         const balance = await this.walletsApiService.getBalance(user.bearer);
-        console.log('kek');
         return new WalletsGetBalanceResponse(balance);
     }
 }

@@ -5,6 +5,7 @@ export interface WalletsConfig {
     clientId: string;
     cfAccessClientId: string;
     cfAccessClientSecret: string;
+    defaultTokenSymbol: string;
 }
 
 export const walletsConfigSchema: Schema<WalletsConfig> = {
@@ -30,5 +31,11 @@ export const walletsConfigSchema: Schema<WalletsConfig> = {
         doc: 'Cloudflare service secret key',
         default: '',
         env: 'WALLET_CF_ACCESS_CLIENT_SECRET',
+    } as SchemaObj<string>,
+
+    defaultTokenSymbol: {
+        doc: 'Default token symbol',
+        default: 'GSWIFT',
+        env: 'WALLET_DEFAULT_TOKEN_SYMBOL',
     } as SchemaObj<string>,
 };

@@ -8,14 +8,18 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from './config/config.module';
 import { WalletsModule } from './wallets/wallets.module';
 import { WalletsApiService } from './wallets/wallets.api.service';
+import { ItemsModule } from './items/items.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
     imports: [
         ConfigModule,
         DatabaseModule,
+        ItemsModule,
         OauthModule,
-        UsersModule,
         OffersModule,
+        OrdersModule,
+        UsersModule,
         WalletsModule,
     ],
     controllers: [AppController],

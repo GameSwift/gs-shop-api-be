@@ -4,7 +4,6 @@ import {
     InternalServerErrorException,
     Logger,
 } from '@nestjs/common';
-import fetch, { RequestInit } from 'node-fetch';
 import { OauthConfig } from './oauth.config';
 
 export interface ExternalTokenInfoData {
@@ -83,7 +82,7 @@ export class OauthApiService {
             const response = await fetch(url, options);
 
             const jsonResponse = await response.json();
-            return { status: response.status, json: jsonResponse };
+            return { status: response.status, json: jsonResponse as T };
         } catch (e) {
             this.logger.error('Oauth error: ', e);
             if (e.code === 'ECONNREFUSED') {

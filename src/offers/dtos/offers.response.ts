@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Offer } from '../entities/offer.entity';
+import { Order } from '../../orders/entities/order.entity';
 
 class OfferResponse {
     @ApiProperty()
@@ -26,5 +27,14 @@ export class OffersFindAllResponse {
 
     constructor(offers: Array<Offer>) {
         this.offers = offers.map((offer) => new OfferResponse(offer));
+    }
+}
+
+export class OffersPurchaseResponse {
+    @ApiProperty()
+    orderId: string;
+
+    constructor({ id }: Order) {
+        this.orderId = id;
     }
 }

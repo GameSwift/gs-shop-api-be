@@ -1,11 +1,13 @@
 import {
+    BadRequestException,
     Inject,
     Injectable,
     InternalServerErrorException,
     Logger,
 } from '@nestjs/common';
-import { WalletsConfig } from './wallets.config';
+import fetch from 'node-fetch';
 import { WalletsApiBalanceResponse } from './dtos/wallets.api.dto';
+import { WalletsConfig } from './wallets.config';
 
 @Injectable()
 export class WalletsApiService {
@@ -37,7 +39,11 @@ export class WalletsApiService {
 
     private async request<T = unknown>(
         path: string,
-        data?: { query?: Record<string, string>; bearer?: string },
+        data?: {
+            query?: Record<string, string>;
+            bearer?: string;
+            body?: object;
+        },
     ): Promise<{
         status: number;
         json: T;
@@ -57,6 +63,10 @@ export class WalletsApiService {
                 );
             }
 
+            if (data?.body) {
+                headers.set('content-type', 'application/json');
+            }
+
             if (data?.bearer) {
                 headers.set('authorization', 'bearer ' + data.bearer);
 
@@ -71,9 +81,14 @@ export class WalletsApiService {
                 this.logger.verbose(`Calling '${url}',' without token`);
             }
 
-            const response = await fetch(url, { headers: headers });
+            const response = await fetch(url, {
+                headers,
+                method: data.body ? 'POST' : 'GET',
+                body: data.body ? JSON.stringify(data.body) : undefined,
+            });
+
             const jsonResponse = await response.json();
-            return { status: response.status, json: jsonResponse };
+            return { status: response.status, json: jsonResponse as T };
         } catch (e) {
             this.logger.error('Partner API Error: ', e);
             if (e.code === 'ECONNREFUSED') {
@@ -92,6 +107,37 @@ export class WalletsApiService {
             '/api/v1/user/balance',
             { bearer },
         );
+
+        return response.json;
+    }
+
+    async spend(bearer: string, amount: number, orderId: string, note: string) {
+        const body = {
+            tokenSymbol: this.walletsConfig.defaultTokenSymbol,
+            amount,
+            orderId,
+            note,
+        };
+
+        const response = await this.request<Array<WalletsApiBalanceResponse>>(
+            '/api/v1/user/order',
+            { bearer, body },
+        );
+
+        if (response.status === 400) {
+            throw new BadRequestException(
+                (response.json as unknown as { message: string }).message,
+            );
+        }
+
+        if (response.status !== 201) {
+            this.logger.warn(
+                'Invalid response from partner api',
+                response.status,
+                response.json,
+            );
+            throw new Error('Invalid response from partner api');
+        }
 
         return response.json;
     }

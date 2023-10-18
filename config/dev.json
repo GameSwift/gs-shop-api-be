@@ -1,0 +1,6 @@
+{
+    "baseUrl": "https://dev-shop-api.gameswift.io/",
+    "oauth": {
+        "server": "https://dev-id.gameswift.io/api/oauth"
+    }
+}

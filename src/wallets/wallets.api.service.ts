@@ -5,7 +5,6 @@ import {
     InternalServerErrorException,
     Logger,
 } from '@nestjs/common';
-import fetch from 'node-fetch';
 import { WalletsApiBalanceResponse } from './dtos/wallets.api.dto';
 import { WalletsConfig } from './wallets.config';
 
